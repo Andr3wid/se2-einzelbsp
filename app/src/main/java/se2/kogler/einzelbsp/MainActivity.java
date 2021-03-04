@@ -12,6 +12,7 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Button btnSubmit;
+    private Button btnResultDisplay;
     private EditText inpStudentNumber;
     private TextView txtServerResp;
 
@@ -21,37 +22,63 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         // find all view elements that are needed for interaction by their id
-        this.btnSubmit = (Button) findViewById(R.id.btn_submit);
-        this.inpStudentNumber = (EditText) findViewById(R.id.inp_studentNumber);
-        this.txtServerResp = (TextView) findViewById(R.id.txt_serverResponse);
+        this.btnSubmit = findViewById(R.id.btn_submit);
+        this.btnResultDisplay = findViewById(R.id.btn_calculate);
+        this.inpStudentNumber = findViewById(R.id.inp_studentNumber);
+        this.txtServerResp = findViewById(R.id.txt_result);
 
         // associate onclick listener
         this.btnSubmit.setOnClickListener(this);
+        this.btnResultDisplay.setOnClickListener(this);
     }
 
     // gets executed when the submit button gets clicked
     @Override
     public void onClick(View v) {
-        switch(v.getId()) {
-            case R.id.btn_submit:
-                // network communication in separate thread
-                ServerCommunicator netcom = new ServerCommunicator(
-                        "se2-isys.aau.at",
-                        53212,
-                        getUserInput());
 
-                Thread t = new Thread(netcom);
-                t.start();
+        if(v.getId() == R.id.btn_submit) {
+            handleServerCommunication();
+        }
 
-                try {
-                    t.join();
-                    this.txtServerResp.setText(netcom.getServerResponse());
-                } catch (InterruptedException e) {
-                    Log.e("network-thread", "Error while waiting for network thread.");
-                    e.printStackTrace();
-                }
+        if(v.getId() == R.id.btn_calculate) {
+            handleCalculation();
+        }
 
-                break;
+    }
+
+    // button handler functions
+    private void handleServerCommunication() {
+        // network communication in separate thread
+        ServerCommunicator netcom = new ServerCommunicator(
+                "se2-isys.aau.at",
+                53212,
+                getUserInput());
+
+        Thread t = new Thread(netcom);
+        t.start();
+
+        try {
+            t.join();
+            this.txtServerResp.setText(netcom.getServerResponse());
+        } catch (InterruptedException e) {
+            Log.e("network-thread", "Error while waiting for network thread.");
+            this.txtServerResp.setText("error");
+            e.printStackTrace();
+        }
+    }
+
+    private void handleCalculation() {
+        Calculation calc = new Calculation(Integer.parseInt(getUserInput()));
+        Thread t = new Thread(calc);
+        t.start();
+
+        try {
+            t.join();
+            this.txtServerResp.setText(calc.getResult());
+        } catch (InterruptedException e) {
+            Log.e("calc-thread", "Error while waiting for calculation thread.");
+            this.txtServerResp.setText("error");
+            e.printStackTrace();
         }
     }
 

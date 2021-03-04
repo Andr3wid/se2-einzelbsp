@@ -36,6 +36,7 @@ public class ServerCommunicator implements Runnable {
 
             out.writeBytes(this.payload + '\n');
             this.serverResponse = in.readLine();
+            Log.i("server-response", "Server responded with: " + this.serverResponse);
 
             this.clientSocket.close();
 
