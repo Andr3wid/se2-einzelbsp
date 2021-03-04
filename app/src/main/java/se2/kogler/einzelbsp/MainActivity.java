@@ -3,18 +3,22 @@ package se2.kogler.einzelbsp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.renderscript.ScriptGroup;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Button btnSubmit;
-    private Button btnResultDisplay;
+    private Button btnCalculate;
     private EditText inpStudentNumber;
-    private TextView txtServerResp;
+    private TextView txtResultDisplay;
+    private ArrayList<Button> buttons;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,26 +27,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // find all view elements that are needed for interaction by their id
         this.btnSubmit = findViewById(R.id.btn_submit);
-        this.btnResultDisplay = findViewById(R.id.btn_calculate);
+        this.btnCalculate = findViewById(R.id.btn_calculate);
         this.inpStudentNumber = findViewById(R.id.inp_studentNumber);
-        this.txtServerResp = findViewById(R.id.txt_result);
+        this.txtResultDisplay = findViewById(R.id.txt_result);
 
-        // associate onclick listener
+        // initialize arraylist and add buttons so form validation can take place
+        this.buttons = new ArrayList<>();
+        this.buttons.add(btnSubmit);
+        this.buttons.add(btnCalculate);
+
+        // set buttons to disabled initially
+        this.btnSubmit.setEnabled(false);
+        this.btnCalculate.setEnabled(false);
+
+        // associate event listeners
         this.btnSubmit.setOnClickListener(this);
-        this.btnResultDisplay.setOnClickListener(this);
+        this.btnCalculate.setOnClickListener(this);
+        this.inpStudentNumber.addTextChangedListener(new InputValidator(this.buttons));
     }
 
     // gets executed when the submit button gets clicked
     @Override
     public void onClick(View v) {
-
-        if(!inputValidator(getUserInput())) {
-            this.txtServerResp.setText("Nur Zahlen und nicht-leere Eingaben sind erlaubt.");
-        } else if(v.getId() == R.id.btn_submit) {
+         if(v.getId() == R.id.btn_submit) {
             handleServerCommunication();
-        } else if(v.getId() == R.id.btn_calculate) {
+         }
+
+         if(v.getId() == R.id.btn_calculate) {
             handleCalculation();
-        }
+         }
 
     }
 
@@ -59,10 +72,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         try {
             t.join();
-            this.txtServerResp.setText(netcom.getServerResponse());
+            this.txtResultDisplay.setText(netcom.getServerResponse());
         } catch (InterruptedException e) {
             Log.e("network-thread", "Error while waiting for network thread.");
-            this.txtServerResp.setText("error");
+            this.txtResultDisplay.setText("error");
             e.printStackTrace();
         }
     }
@@ -74,28 +87,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         try {
             t.join();
-            this.txtServerResp.setText(calc.getResult());
+            this.txtResultDisplay.setText(calc.getResult());
         } catch (InterruptedException e) {
             Log.e("calc-thread", "Error while waiting for calculation thread.");
-            this.txtServerResp.setText("error");
+            this.txtResultDisplay.setText("error");
             e.printStackTrace();
         }
-    }
-
-    // validates user input by checking if the text is not an empty string
-    // and convertible into a number
-    private boolean inputValidator(String input) {
-        boolean isNotEmpty = !(input.equals(""));
-        boolean isNumber;
-
-        try {
-            Integer.parseInt(input);
-            isNumber = true;
-        } catch (NumberFormatException nfe) {
-            isNumber = false;
-        }
-
-        return isNotEmpty && isNumber;
     }
 
     // getter & setter section
@@ -107,8 +104,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return inpStudentNumber;
     }
 
-    public TextView getTxtServerResp() {
-        return txtServerResp;
+    public TextView getTxtResultDisplay() {
+        return txtResultDisplay;
     }
 
     public String getUserInput() {
