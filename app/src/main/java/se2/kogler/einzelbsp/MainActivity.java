@@ -3,6 +3,7 @@ package se2.kogler.einzelbsp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,8 +34,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch(v.getId()) {
             case R.id.btn_submit:
-                this.txtServerResp
-                        .setText("You entered: " + this.inpStudentNumber.getText().toString());
+                // network communication in separate thread
+                ServerCommunicator netcom = new ServerCommunicator(
+                        "se2-isys.aau.at",
+                        53212,
+                        getUserInput());
+
+                Thread t = new Thread(netcom);
+                t.start();
+
+                try {
+                    t.join();
+                    this.txtServerResp.setText(netcom.getServerResponse());
+                } catch (InterruptedException e) {
+                    Log.e("network-thread", "Error while waiting for network thread.");
+                    e.printStackTrace();
+                }
+
                 break;
         }
     }
@@ -50,5 +66,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public TextView getTxtServerResp() {
         return txtServerResp;
+    }
+
+    public String getUserInput() {
+        return inpStudentNumber.getText().toString();
     }
 }
