@@ -36,11 +36,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
 
-        if(v.getId() == R.id.btn_submit) {
+        if(!inputValidator(getUserInput())) {
+            this.txtServerResp.setText("Nur Zahlen und nicht-leere Eingaben sind erlaubt.");
+        } else if(v.getId() == R.id.btn_submit) {
             handleServerCommunication();
-        }
-
-        if(v.getId() == R.id.btn_calculate) {
+        } else if(v.getId() == R.id.btn_calculate) {
             handleCalculation();
         }
 
@@ -80,6 +80,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             this.txtServerResp.setText("error");
             e.printStackTrace();
         }
+    }
+
+    // validates user input by checking if the text is not an empty string
+    // and convertible into a number
+    private boolean inputValidator(String input) {
+        boolean isNotEmpty = !(input.equals(""));
+        boolean isNumber;
+
+        try {
+            Integer.parseInt(input);
+            isNumber = true;
+        } catch (NumberFormatException nfe) {
+            isNumber = false;
+        }
+
+        return isNotEmpty && isNumber;
     }
 
     // getter & setter section
