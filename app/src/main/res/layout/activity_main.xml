@@ -7,7 +7,7 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/txtAppHeader"
+        android:id="@+id/txt_appHeader"
         android:layout_width="295dp"
         android:layout_height="36dp"
         android:layout_marginStart="108dp"
@@ -22,7 +22,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/txtInputLabel"
+        android:id="@+id/txt_inputLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="58dp"
@@ -34,10 +34,10 @@
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtAppHeader" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_appHeader" />
 
     <EditText
-        android:id="@+id/inpMatrikelnr"
+        android:id="@+id/inp_studentNumber"
         android:layout_width="287dp"
         android:layout_height="49dp"
         android:layout_marginStart="58dp"
@@ -49,10 +49,10 @@
         android:inputType="numberSigned"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtInputLabel" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_inputLabel" />
 
     <Button
-        android:id="@+id/btnSubmit"
+        android:id="@+id/btn_submit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="58dp"
@@ -64,19 +64,19 @@
         app:backgroundTint="@color/teal_700"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inpMatrikelnr" />
+        app:layout_constraintTop_toBottomOf="@+id/inp_studentNumber" />
 
     <View
-        android:id="@+id/divider"
+        android:id="@+id/div_main"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="61dp"
         android:background="?android:attr/listDivider"
-        app:layout_constraintTop_toBottomOf="@+id/btnSubmit"
+        app:layout_constraintTop_toBottomOf="@+id/btn_submit"
         tools:layout_editor_absoluteX="16dp" />
 
     <TextView
-        android:id="@+id/txtLabelResponse"
+        android:id="@+id/txt_srvHead"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="58dp"
@@ -88,10 +88,10 @@
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider" />
+        app:layout_constraintTop_toBottomOf="@+id/div_main" />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/txt_serverResponse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="144dp"
@@ -104,5 +104,5 @@
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtLabelResponse" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_srvHead" />
 </androidx.constraintlayout.widget.ConstraintLayout>
