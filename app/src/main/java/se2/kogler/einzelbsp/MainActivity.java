@@ -96,18 +96,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     // getter & setter section
-    public Button getBtnSubmit() {
-        return btnSubmit;
-    }
-
-    public EditText getInpStudentNumber() {
-        return inpStudentNumber;
-    }
-
-    public TextView getTxtResultDisplay() {
-        return txtResultDisplay;
-    }
-
     public String getUserInput() {
         return inpStudentNumber.getText().toString();
     }
